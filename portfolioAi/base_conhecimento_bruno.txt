@@ -1,0 +1,157 @@
+BASE DE CONHECIMENTO — BRUNO AUGUSTO SIQUEIRA
+Atualizada em: 7 de outubro de 2026.
+Fonte: informações fornecidas pelo próprio Bruno.
+
+1. APRESENTAÇÃO PESSOAL
+
+Bruno Augusto Siqueira é desenvolvedor júnior e estudante de Análise e Desenvolvimento de Sistemas na Universidade Santa Cruz. Em outubro de 2026, Bruno informou ter 21 anos.
+
+Bruno atua com desenvolvimento de software full stack e criação de agentes de inteligência artificial. Suas áreas de interesse incluem aplicações web, aplicativos com React Native e soluções que utilizam IA.
+
+Bruno busca evoluir na carreira, ampliar seus conhecimentos e aprender novas tecnologias por meio de estudos e experiências práticas.
+
+2. TRAJETÓRIA NA TECNOLOGIA
+
+O interesse de Bruno por tecnologia começou com estudos por conta própria. Em 2023, ele estudou os fundamentos de HTML e CSS. Em março de 2024, ingressou na graduação em Análise e Desenvolvimento de Sistemas e passou a estudar programação de forma mais aprofundada.
+
+Em 2025, Bruno participou de um processo seletivo para trainee e conquistou a vaga. Ele considera essa entrada na área um dos momentos mais importantes de sua trajetória.
+
+Após nove meses como trainee, Bruno participou de uma nova seleção para desenvolvedor júnior, concorrendo com outros cinco trainees, e foi selecionado. Desde agosto de 2026, atua como desenvolvedor júnior.
+
+3. FORMAÇÃO ACADÊMICA E CURSOS
+
+Bruno cursa Análise e Desenvolvimento de Sistemas na Universidade Santa Cruz. A graduação começou em março de 2024 e, conforme informado em outubro de 2026, tem previsão de conclusão em 2026. A conclusão ainda não foi confirmada.
+
+Bruno também realizou cursos de desenvolvimento front-end e back-end pela Udemy. Não foram informados os nomes dos cursos, suas cargas horárias ou datas de conclusão. Não há informações fornecidas sobre certificações específicas.
+
+4. EXPERIÊNCIA PROFISSIONAL EM TECNOLOGIA
+
+Como trainee, durante nove meses, Bruno trabalhou no desenvolvimento e na manutenção de aplicativos com React Native e TypeScript.
+
+Após sua efetivação como desenvolvedor júnior, em agosto de 2026, Bruno passou a trabalhar com desenvolvimento de agentes de IA, utilizando Python, tool calling e RAG.
+
+No contexto de sua experiência em tecnologia, Bruno citou TypeScript, Node.js, JavaScript, React, React Native e Python, além das técnicas de RAG e tool calling.
+
+Bruno não informou explicitamente o nome da empresa correspondente a cada cargo, nem resultados quantitativos dessas experiências. A Ablsystem foi mencionada como empresa para a qual ele desenvolveu os projetos Logfly e Uni Santa Cruz, detalhados na seção de projetos.
+
+5. EXPERIÊNCIAS ANTERIORES
+
+Antes de sua atuação em tecnologia, Bruno teve experiência como soldado no Exército durante um ano e como auxiliar de produção durante um ano.
+
+Não foram informadas as datas dessas experiências, a empresa em que trabalhou como auxiliar de produção ou suas responsabilidades específicas nesses períodos.
+
+6. CONHECIMENTOS TÉCNICOS
+
+Bruno utiliza JavaScript, TypeScript, Python, HTML, CSS e SQL. Trabalha com React, React Native e Node.js e tem contato com os bancos de dados PostgreSQL, MongoDB e MySQL. Entre as ferramentas que utiliza estão Git, GitHub e Postman.
+
+Na área de inteligência artificial, Bruno trabalha com agentes de IA, tool calling e RAG. Tool calling e RAG são técnicas utilizadas em suas soluções, não linguagens de programação.
+
+As tecnologias e ferramentas com as quais Bruno declara ter mais experiência prática são React, React Native, Node.js, PostgreSQL, Git e GitHub.
+
+Bruno se sente mais confortável com desenvolvimento full stack usando JavaScript, desenvolvimento de aplicativos com React Native e construção de agentes de IA. Não foram informados tempos de experiência por tecnologia ou níveis individuais de domínio.
+
+7. ESTUDOS ATUAIS
+
+Em outubro de 2026, Bruno está estudando Docker, arquitetura de software, agentes de inteligência artificial e inglês.
+
+Esses estudos fazem parte de seu objetivo de ampliar conhecimentos e evoluir como desenvolvedor. O estudo desses assuntos não significa que Bruno se apresente como especialista neles.
+
+8. IDIOMAS
+
+Bruno declara ter inglês intermediário. Consegue ler, escrever e compreender o idioma, mas ainda não conversa fluentemente em inglês. Ele continua estudando para aprimorar suas habilidades.
+
+9. FORMA DE TRABALHAR
+
+Ao resolver um problema, Bruno procura analisar a situação, pesquisar e buscar outras opiniões antes de definir uma solução.
+
+Bruno já trabalhou tanto em equipe quanto individualmente e considera que consegue atuar bem nos dois contextos.
+
+Entre as qualidades que destaca estão interesse em aprender, boa comunicação, proatividade e dedicação. Não foram fornecidos exemplos específicos para cada qualidade ou detalhes sobre como ele recebe feedback.
+
+10. OBJETIVOS E DISPONIBILIDADE PROFISSIONAL
+
+Bruno procura oportunidades que permitam evoluir na carreira de desenvolvedor e aprender coisas novas. Tem interesse em desenvolvimento de software e desenvolvimento de agentes de inteligência artificial.
+
+Em 7 de outubro de 2026, Bruno informou estar aberto a oportunidades remotas, híbridas ou presenciais, sem preferência entre essas modalidades. Também informou aceitar freelances e parcerias.
+
+Essa disponibilidade corresponde à data da informação e pode mudar. Não foram informados horários disponíveis, prazo para início, valores ou condições de contratação.
+
+11. PROJETO PROFISSIONAL — APP LOGFLY
+
+Bruno desenvolveu individualmente o aplicativo Logfly para a empresa Ablsystem, com a finalidade de atender a atividades de call center.
+
+Um dos principais desafios do Logfly foi lidar com mensagens e WebSocket. Durante o projeto, Bruno decidiu migrar de JavaScript para TypeScript para buscar maior organização e qualidade do código.
+
+Bruno destaca o aprendizado de TypeScript como um dos resultados de sua experiência com o Logfly. Não foram informadas métricas de uso, desempenho ou impacto comercial do aplicativo.
+
+12. PROJETO PROFISSIONAL — APP UNI SANTA CRUZ
+
+Bruno participou, em equipe, do desenvolvimento do aplicativo Uni Santa Cruz para a empresa Ablsystem. O aplicativo foi criado para alunos da Universidade Santa Cruz.
+
+O principal desafio mencionado por Bruno foi a implementação visual da aplicação. Não foram detalhadas as funcionalidades sob sua responsabilidade, sua contribuição individual ou as tecnologias específicas desse projeto.
+
+13. PROJETO PESSOAL — STOCKSYSTEM
+
+Bruno criou o Stocksystem individualmente como um projeto pessoal de gerenciamento de estoque.
+
+O principal desafio citado foi a lógica da aplicação. Entre as decisões técnicas relatadas está aplicar um agente de inteligência artificial para melhorar a solução. Não foram detalhadas as funções desse agente nem confirmado o estágio de implementação dessa integração.
+
+14. PROJETO PESSOAL — APLICATIVO PARA BARBEARIA
+
+Bruno desenvolveu individualmente um aplicativo pessoal para gerenciar agendamentos de uma barbearia.
+
+Na época do projeto, Bruno estava aprendendo React. Esse aprendizado foi um dos desafios associados ao desenvolvimento da aplicação. Não foram informados um nome oficial para o projeto ou detalhes sobre sua implantação.
+
+15. PROJETO PESSOAL — APLICATIVO DE FINANÇAS
+
+Bruno desenvolveu individualmente um projeto pessoal de gerenciamento financeiro com inteligência artificial integrada.
+
+Um dos principais desafios foi trabalhar na aplicação enquanto aprendia sobre IA. Não foram informados o nome oficial do aplicativo, as funções específicas da integração de IA ou seus resultados de uso.
+
+16. PROJETO — SITE DE CONTROLE DE CONTAS
+
+Bruno desenvolveu individualmente um site para gerenciar contas. Na época, estava aprendendo React, o que fez parte dos desafios do projeto.
+
+Não foram detalhados o público do site, suas funcionalidades específicas ou seu estágio de publicação.
+
+17. PROJETO — PORTFÓLIO COM INTELIGÊNCIA ARTIFICIAL
+
+Bruno desenvolve individualmente um portfólio composto por um site de apresentação com foco visual, um backend para armazenar informações e um aplicativo para gerenciar o conteúdo exibido.
+
+O conceito do portfólio inclui uma IA especializada em informações sobre Bruno, permitindo que visitantes façam perguntas relacionadas a ele e ao seu trabalho.
+
+Bruno citou o aprendizado de RAG como um dos desafios desse projeto. A descrição apresenta o conceito do portfólio e não confirma que todas as funcionalidades planejadas estejam concluídas.
+
+18. RESUMO PARA VISITANTES E RECRUTADORES
+
+Bruno Augusto Siqueira é desenvolvedor júnior, estudante de Análise e Desenvolvimento de Sistemas e tem atuação em desenvolvimento full stack, aplicativos com React Native e agentes de inteligência artificial.
+
+Sua trajetória em tecnologia começou com estudos independentes, avançou com a graduação e incluiu uma experiência de nove meses como trainee antes de sua seleção para desenvolvedor júnior. Ele reúne projetos individuais e participação em equipe, incluindo soluções para call center, ambiente universitário, estoque, agendamentos e finanças.
+
+Bruno destaca seu interesse em aprender, sua comunicação, proatividade e dedicação. Seu objetivo é continuar evoluindo como desenvolvedor, com interesse tanto em software quanto em agentes de IA.
+
+19. PERGUNTAS FREQUENTES
+
+Quem é Bruno Augusto Siqueira?
+Bruno é desenvolvedor júnior e estudante de Análise e Desenvolvimento de Sistemas na Universidade Santa Cruz. Atua com desenvolvimento full stack e agentes de IA.
+
+Bruno já concluiu a faculdade?
+Em outubro de 2026, Bruno informou estar terminando a graduação, com previsão de conclusão em 2026. A conclusão ainda não foi confirmada.
+
+Com quais tecnologias Bruno tem mais experiência prática?
+Bruno destaca React, React Native, Node.js, PostgreSQL, Git e GitHub.
+
+Bruno tem experiência com inteligência artificial?
+Sim. Desde sua efetivação como desenvolvedor júnior, em agosto de 2026, Bruno trabalha com agentes de IA utilizando Python, tool calling e RAG. Ele também continua estudando a área.
+
+Bruno trabalha bem em equipe?
+Bruno relata experiência tanto em equipe quanto individualmente e considera que trabalha bem nos dois contextos. O aplicativo Uni Santa Cruz é um exemplo de projeto em equipe do qual participou.
+
+Bruno fala inglês fluentemente?
+Bruno declara inglês intermediário, com leitura, escrita e compreensão, mas sem fluência na conversação.
+
+Bruno aceita freelances ou parcerias?
+Em 7 de outubro de 2026, Bruno informou aceitar freelances e parcerias. As condições e a disponibilidade atual precisam ser confirmadas com ele.
+
+Que tipo de oportunidade Bruno busca?
+Oportunidades de crescimento e aprendizado em desenvolvimento de software ou agentes de IA. Em outubro de 2026, informou estar aberto a trabalho remoto, híbrido ou presencial.
