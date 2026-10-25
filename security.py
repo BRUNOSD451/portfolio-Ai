@@ -4,15 +4,19 @@ import json
 import asyncio
 import os
 import re
-import sqlite3
 import time
 from pathlib import Path
-from contextlib import closing
 
 import httpx
 from starlette.responses import JSONResponse
 from pydantic import ValidationError
 from chat_schema import ChatRequest
+import database
+
+BUDGET_SCHEMA = {
+    "sqlite": ["CREATE TABLE IF NOT EXISTS budget (day TEXT, action TEXT, count INTEGER, PRIMARY KEY(day, action))"],
+    "mysql": ["CREATE TABLE IF NOT EXISTS budget (day CHAR(10), action VARCHAR(20), count INT, PRIMARY KEY(day, action))"],
+}
 
 
 async def verify_admin(token: str) -> bool:
@@ -25,6 +29,19 @@ async def verify_admin(token: str) -> bool:
     response.raise_for_status()
     data = response.json()
     return data.get("admin", {}).get("role") == "admin" and data.get("expiresAt", 0) > time.time() * 1000
+
+
+def client_ip(scope):
+    # Com TRUSTED_PROXY_HOPS=N, usa o N-ésimo endereço da direita no X-Forwarded-For,
+    # que foi adicionado pelo proxy da hospedagem (ex.: 1 no Render). Os da esquerda
+    # vêm do visitante e podem ser falsificados. Sem a variável, o cabeçalho é ignorado.
+    hops = int(os.getenv("TRUSTED_PROXY_HOPS", "0"))
+    if hops:
+        forwarded = dict(scope.get("headers", [])).get(b"x-forwarded-for", b"").decode("latin1")
+        addresses = [value.strip() for value in forwarded.split(",") if value.strip()]
+        if len(addresses) >= hops:
+            return addresses[-hops]
+    return (scope.get("client") or ("unknown",))[0]
 
 
 class SecurityMiddleware:
@@ -56,14 +73,14 @@ class SecurityMiddleware:
         return True
 
     def reserve_daily(self, action, limit):
-        self.budget_path.parent.mkdir(parents=True, exist_ok=True)
         day = time.strftime("%Y-%m-%d", time.gmtime())
-        with closing(sqlite3.connect(self.budget_path, timeout=2)) as connection, connection:
-            connection.execute("CREATE TABLE IF NOT EXISTS budget (day TEXT, action TEXT, count INTEGER, PRIMARY KEY(day, action))")
-            connection.execute("DELETE FROM budget WHERE day < ?", (day,))
-            result = connection.execute(
-                "INSERT INTO budget VALUES (?, ?, 1) ON CONFLICT(day, action) DO UPDATE SET count=count+1 WHERE count<?",
-                (day, action, limit),
+        with database.transaction(self.budget_path, BUDGET_SCHEMA, timeout=2) as cursor:
+            cursor.execute("DELETE FROM budget WHERE day < ?", (day,))
+            ignore = "INSERT IGNORE" if database.is_mysql() else "INSERT OR IGNORE"
+            cursor.execute(f"{ignore} INTO budget VALUES (?, ?, 0)", (day, action))
+            # Incremento condicional e atômico: consultas simultâneas não passam do limite.
+            result = cursor.execute(
+                "UPDATE budget SET count=count+1 WHERE day=? AND action=? AND count<?", (day, action, limit)
             )
             return result.rowcount == 1
 
@@ -80,7 +97,7 @@ class SecurityMiddleware:
                 headers["Retry-After"] = "60"
             await JSONResponse({"detail": message}, status_code=status, headers=headers)(scope, receive, send)
 
-        ip = (scope.get("client") or ("unknown",))[0]
+        ip = client_ip(scope)
         if not self.allow("global", 120, 60) or not self.allow((ip, path), 10 if path == "/chat" else 20, 600):
             return await reject(429, "Muitas consultas. Aguarde antes de tentar novamente.")
         if path == "/knowledge":
@@ -131,7 +148,7 @@ class SecurityMiddleware:
             try:
                 if not self.reserve_daily(action, self.chat_daily_limit if action == "chat" else 10):
                     return await reject(429, "Limite diário de consultas atingido. Tente novamente amanhã.")
-            except (OSError, sqlite3.Error):
+            except (OSError, *database.Error):
                 return await reject(503, "Não foi possível verificar a cota de consultas.")
 
             delivered = False

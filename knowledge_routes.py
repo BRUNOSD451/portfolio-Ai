@@ -1,10 +1,9 @@
 """Upload administrativo da base; o chat público só pode consultá-la."""
 
-import sqlite3
-
 from fastapi import APIRouter, HTTPException, UploadFile
 from starlette.concurrency import run_in_threadpool
 
+import database
 import rag
 
 
@@ -15,7 +14,7 @@ router = APIRouter(prefix="/knowledge")
 def knowledge_status():
     try:
         return rag.status()
-    except (OSError, sqlite3.Error):
+    except (OSError, *database.Error):
         raise HTTPException(503, "Não foi possível acessar a base de conhecimento.")
 
 
@@ -27,7 +26,7 @@ async def upload_knowledge(arquivo: UploadFile):
         return await run_in_threadpool(rag.ingest, arquivo.filename or "", content)
     except rag.RagError as exc:
         raise HTTPException(exc.status, str(exc)) from exc
-    except (OSError, sqlite3.Error) as exc:
+    except (OSError, *database.Error) as exc:
         raise HTTPException(503, "Não foi possível salvar a base de conhecimento.") from exc
     finally:
         await arquivo.close()

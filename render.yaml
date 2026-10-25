@@ -1,0 +1,25 @@
+# Blueprint do Render: New > Blueprint e selecione este repositório.
+# Valores com sync: false são pedidos na criação (Environment no painel).
+services:
+  - type: web
+    name: portfolio-ai
+    runtime: python
+    plan: free
+    region: virginia
+    buildCommand: pip install -r requirements.txt
+    # O IP do visitante vem de TRUSTED_PROXY_HOPS, não dos proxy headers do Uvicorn.
+    startCommand: uvicorn main:app --host 0.0.0.0 --port $PORT --no-proxy-headers
+    envVars:
+      - key: TRUSTED_PROXY_HOPS
+        value: "1"
+      - key: OPENROUTER_API_KEY
+        sync: false
+      # mysql://USUARIO:SENHA@HOST:4000/portfolio_ai (banco separado do Node)
+      - key: DATABASE_URL
+        sync: false
+      # https://portfolio-api.onrender.com
+      - key: PORTFOLIO_BACKEND_URL
+        sync: false
+      # https://SEU-SITE.vercel.app
+      - key: CORS_ORIGINS
+        sync: false

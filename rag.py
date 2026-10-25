@@ -1,19 +1,19 @@
-"""Indexação de TXT e busca semântica persistida em SQLite."""
+"""Indexação de TXT e busca semântica persistida no banco (MySQL ou SQLite local)."""
 
 import hashlib
 import json
 import math
 import os
 import re
-import sqlite3
 import ssl
-from contextlib import closing
 from datetime import datetime, timezone
 from pathlib import Path
 from threading import Lock
 
 import httpx
 import truststore
+
+import database
 
 MAX_BYTES = 256 * 1024
 INGEST_LOCK = Lock()
@@ -25,18 +25,49 @@ class RagError(Exception):
         self.status = status
 
 
-def _connect():
+# Um registro por trecho: evita linhas enormes, limitadas em bancos como o TiDB.
+SCHEMA = {
+    "sqlite": [
+        "CREATE TABLE IF NOT EXISTS knowledge_meta (id INTEGER PRIMARY KEY CHECK(id=1), filename TEXT NOT NULL, "
+        "indexed_at TEXT NOT NULL, model TEXT NOT NULL, sha256 TEXT NOT NULL, chunk_count INTEGER NOT NULL)",
+        "CREATE TABLE IF NOT EXISTS knowledge_chunks (position INTEGER PRIMARY KEY, text TEXT NOT NULL, vector TEXT NOT NULL)",
+    ],
+    "mysql": [
+        "CREATE TABLE IF NOT EXISTS knowledge_meta (id INT PRIMARY KEY, filename VARCHAR(200) NOT NULL, "
+        "indexed_at VARCHAR(40) NOT NULL, model VARCHAR(200) NOT NULL, sha256 CHAR(64) NOT NULL, chunk_count INT NOT NULL)",
+        "CREATE TABLE IF NOT EXISTS knowledge_chunks (position INT PRIMARY KEY, text MEDIUMTEXT NOT NULL, vector MEDIUMTEXT NOT NULL)",
+    ],
+}
+FIELDS = ("filename", "indexed_at", "model", "sha256", "chunk_count")
+
+
+def _transaction():
     path = Path(os.getenv("RAG_DATABASE_PATH", str(Path(__file__).parent / "data" / "knowledge.sqlite3")))
-    path.parent.mkdir(parents=True, exist_ok=True)
-    connection = sqlite3.connect(path, timeout=10)
-    connection.execute("CREATE TABLE IF NOT EXISTS knowledge (id INTEGER PRIMARY KEY CHECK(id=1), payload TEXT NOT NULL)")
-    return connection
+    return database.transaction(path, SCHEMA)
 
 
-def _snapshot():
-    with closing(_connect()) as connection:
-        row = connection.execute("SELECT payload FROM knowledge WHERE id=1").fetchone()
-    return json.loads(row[0]) if row else None
+def _snapshot(with_chunks=False):
+    with _transaction() as cursor:
+        row = cursor.execute(f"SELECT {', '.join(FIELDS)} FROM knowledge_meta WHERE id=1").fetchone()
+        if not row:
+            return None
+        snapshot = dict(zip(FIELDS, row))
+        if with_chunks:
+            rows = cursor.execute("SELECT text, vector FROM knowledge_chunks ORDER BY position").fetchall()
+            snapshot["chunks"] = [{"text": text, "vector": json.loads(vector)} for text, vector in rows]
+    return snapshot
+
+
+# Troca a base inteira em uma única transação.
+def save(snapshot):
+    with _transaction() as cursor:
+        cursor.execute("DELETE FROM knowledge_chunks")
+        cursor.execute("DELETE FROM knowledge_meta")
+        cursor.execute(f"INSERT INTO knowledge_meta (id, {', '.join(FIELDS)}) VALUES (1, ?, ?, ?, ?, ?)",
+                       tuple(snapshot[key] for key in FIELDS))
+        for position, chunk in enumerate(snapshot["chunks"]):
+            cursor.execute("INSERT INTO knowledge_chunks (position, text, vector) VALUES (?, ?, ?)",
+                           (position, chunk["text"], json.dumps(chunk["vector"])))
 
 
 def _metadata(snapshot):
@@ -172,9 +203,7 @@ def ingest(filename: str, content: bytes):
             "model": model, "sha256": digest, "chunk_count": len(chunks),
             "chunks": [{"text": text, "vector": vector} for text, vector in zip(chunks, vectors, strict=True)],
         }
-        with closing(_connect()) as connection, connection:
-            connection.execute("INSERT OR REPLACE INTO knowledge(id, payload) VALUES (1, ?)",
-                               (json.dumps(snapshot, ensure_ascii=False),))
+        save(snapshot)
         return {**_metadata(snapshot), "unchanged": False}
     finally:
         INGEST_LOCK.release()
@@ -184,7 +213,7 @@ def ingest(filename: str, content: bytes):
 def search(question: str):
     if not question.strip():
         raise RagError("Informe uma pergunta para pesquisar.", 400)
-    snapshot = _snapshot()
+    snapshot = _snapshot(with_chunks=True)
     if snapshot is None:
         return {"ready": False, "trechos": [], "mensagem": "A base de conhecimento ainda não foi enviada."}
     query = embed([question], snapshot['model'])[0]
