@@ -80,3 +80,47 @@ class ChatFlowTests(unittest.TestCase):
         with patch.object(backend.httpx, "get", get):
             asyncio.run(run())
         self.assertEqual(paths, ["/projects/catalog", "/technologies/get", "/projects/catalog"])
+
+
+class SaveMessageTests(unittest.TestCase):
+    def setUp(self):
+        import messages
+        self.messages = messages
+        messages._missing_config_logged = False
+
+    def run_save(self, content, handler):
+        original = httpx.AsyncClient
+        def client(**kwargs):
+            return original(transport=httpx.MockTransport(handler), **kwargs)
+        async def run():
+            with patch.object(self.messages.httpx, "AsyncClient", client):
+                self.messages.save_message(content)
+                await asyncio.gather(*self.messages._pending)
+        asyncio.run(run())
+
+    def test_posts_truncated_content_with_key(self):
+        requests = []
+        def handler(request):
+            requests.append(request)
+            return httpx.Response(201, json={})
+        with patch.dict(os.environ, PORTFOLIO_API_URL="https://api.test/", MESSAGES_API_KEY="chave"):
+            self.run_save("a" * 10050, handler)
+        self.assertEqual(str(requests[0].url), "https://api.test/messages/create")
+        self.assertEqual(requests[0].headers["X-Api-Key"], "chave")
+        self.assertEqual(json.loads(requests[0].content), {"conteudo": "a" * 10000, "sessao": None})
+
+    def test_failures_are_logged_without_secrets(self):
+        for handler in (lambda request: httpx.Response(429),
+                        lambda request: (_ for _ in ()).throw(httpx.ConnectTimeout("chave"))):
+            with patch.dict(os.environ, PORTFOLIO_API_URL="https://api.test", MESSAGES_API_KEY="chave"), \
+                    self.assertLogs(self.messages.logger) as logs:
+                self.run_save("secret", handler)
+            self.assertNotIn("chave", " ".join(logs.output))
+            self.assertNotIn("secret", " ".join(logs.output))
+
+    def test_missing_config_warns_once_and_skips(self):
+        env = {k: v for k, v in os.environ.items() if k not in ("PORTFOLIO_API_URL", "MESSAGES_API_KEY")}
+        with patch.dict(os.environ, env, clear=True), self.assertLogs(self.messages.logger) as logs:
+            self.run_save("oi", lambda request: self.fail("não deveria chamar"))
+            self.run_save("oi", lambda request: self.fail("não deveria chamar"))
+        self.assertEqual(len(logs.output), 1)

@@ -14,6 +14,7 @@ from langchain_openai import ChatOpenAI
 from openai import APIError, APITimeoutError
 from pydantic import ValidationError
 from backend import request_cache
+from messages import save_message
 
 from tools import PORTFOLIO_TOOLS
 from knowledge_routes import router as knowledge_router
@@ -164,6 +165,8 @@ class ChatResponse(BaseModel):
 @app.post("/chat", response_model=ChatResponse)
 async def chat(request: ChatRequest) -> ChatResponse:
     request_id = uuid4().hex
+    # O chat não tem identificador de conversa; a mensagem é gravada sem sessão.
+    save_message(request.message)
     api_key = os.getenv("OPENROUTER_API_KEY")
     if not api_key:
         raise HTTPException(

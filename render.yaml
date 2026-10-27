@@ -20,6 +20,11 @@ services:
       # https://portfolio-api.onrender.com
       - key: PORTFOLIO_BACKEND_URL
         sync: false
+      # https://portfolio-api.onrender.com (gravação das mensagens do chat)
+      - key: PORTFOLIO_API_URL
+        sync: false
+      - key: MESSAGES_API_KEY
+        sync: false
       # https://SEU-SITE.vercel.app
       - key: CORS_ORIGINS
         sync: false
